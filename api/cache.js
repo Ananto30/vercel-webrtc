@@ -1,6 +1,13 @@
 import { createClient } from "redis";
 
-const redis = await createClient({ url: process.env.REDIS_URL }).connect();
+let redis;
+
+const initializeRedis = async () => {
+  redis = createClient({ url: process.env.REDIS_URL });
+  await redis.connect();
+};
+
+initializeRedis();
 
 export const getRoomMembers = async (roomId) => {
   const members = await redis.sMembers(`room:${roomId}`);
