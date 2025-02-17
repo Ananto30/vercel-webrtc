@@ -1,0 +1,16 @@
+{
+    "name": "vercel-serverless-api",
+    "version": "1.0.0",
+    "description": "A simple serverless API for managing rooms and events using Vercel.",
+    "main": "index.js",
+    "scripts": {
+        "start": "vercel dev",
+        "deploy": "vercel"
+    },
+    "dependencies": {
+        "redis": "^4.0.0"
+    },
+    "devDependencies": {},
+    "author": "",
+    "license": "MIT"
+}

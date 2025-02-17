@@ -1,17 +1,17 @@
-import { roomEvents } from "./cache.js";
+import { getRoomEvents, clearRoomEvents } from "./cache.js";
 import cors from "./cors.js";
 
-export default function handler(req, res) {
-  cors(req, res, () => {
+export default async function handler(req, res) {
+  cors(req, res, async () => {
     if (req.method === "GET") {
       const roomId = req.query.room_id;
 
-      if (!roomEvents[roomId]) {
+      const events = await getRoomEvents(roomId);
+      if (!events.length) {
         return res.status(404).json({ error: "Room not found" });
       }
 
-      const events = roomEvents[roomId];
-      roomEvents[roomId] = [];
+      await clearRoomEvents(roomId);
 
       return res.json({ events: events });
     } else {
