@@ -3,8 +3,18 @@ import { createClient } from "redis";
 let redis;
 
 const initializeRedis = async () => {
-  redis = createClient({ url: process.env.REDIS_URL });
-  await redis.connect();
+  try {
+    redis = createClient({
+      url: process.env.REDIS_URL,
+      socket: {
+        connectTimeout: 5000, // Increase the timeout to 5000ms (5 seconds)
+      },
+    });
+    await redis.connect();
+    console.log("Connected to Redis");
+  } catch (error) {
+    console.error("Failed to connect to Redis:", error);
+  }
 };
 
 initializeRedis();
