@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/join",
+      "methods": ["POST"],
+      "dest": "/api/join.js"
+    },
+    {
+      "src": "/api/leave",
+      "methods": ["POST"],
+      "dest": "/api/leave.js"
+    },
+    {
+      "src": "/api/event",
+      "methods": ["POST"],
+      "dest": "/api/event.js"
+    },
+    {
+      "src": "/api/events",
+      "methods": ["GET"],
+      "dest": "/api/events.js"
+    },
+    {
+      "src": "/api/members",
+      "methods": ["GET"],
+      "dest": "/api/members.js"
+    }
+  ]
+}
