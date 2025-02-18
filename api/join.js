@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
       const members = await getRoomMembers(room_id);
       if (members.includes(client_id)) {
-        return res.status(200).json({ error: "Client is already in the room" });
+        return res.json({ members });
       }
 
       await addRoomMember(room_id, client_id);
