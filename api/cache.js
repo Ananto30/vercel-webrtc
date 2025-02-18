@@ -19,27 +19,44 @@ const initializeRedis = async () => {
 
 initializeRedis();
 
+const serialize = (obj) => JSON.stringify(obj);
+const deserialize = (str) => JSON.parse(str);
+
 export const getRoomMembers = async (roomId) => {
-  const members = await redis.sMembers(`room:${roomId}`);
-  return members;
+  const members = await redis.get(`room:${roomId}:members`);
+  return members ? deserialize(members) : [];
 };
 
 export const addRoomMember = async (roomId, clientId) => {
-  await redis.sAdd(`room:${roomId}`, clientId);
+  const members = await getRoomMembers(roomId);
+  members.push(clientId);
+  console.log("members", members);
+  await redis.set(`room:${roomId}:members`, serialize(members));
 };
 
 export const removeRoomMember = async (roomId, clientId) => {
-  await redis.sRem(`room:${roomId}`, clientId);
+  let members = await getRoomMembers(roomId);
+  members = members.filter((id) => id !== clientId);
+  await redis.set(`room:${roomId}:members`, serialize(members));
 };
 
 export const getRoomEvents = async (roomId) => {
-  const events = await redis.lRange(`room:${roomId}:events`, 0, -1);
-  return events.map((event) => JSON.parse(event));
+  const events = await redis.get(`room:${roomId}:events`);
+  return events ? deserialize(events) : [];
 };
 
 export const addRoomEvent = async (roomId, event) => {
-  const eventJSON = JSON.stringify(event);
-  await redis.rPush(`room:${roomId}:events`, eventJSON);
+  const events = await getRoomEvents(roomId);
+  events.push(event);
+  await redis.set(`room:${roomId}:events`, serialize(events));
+};
+
+export const addRoomEvents = async (roomId, newEvents) => {
+  const events = await getRoomEvents(roomId);
+  await redis.set(
+    `room:${roomId}:events`,
+    serialize([...events, ...newEvents])
+  );
 };
 
 export const clearRoomEvents = async (roomId) => {

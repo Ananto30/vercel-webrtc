@@ -6,6 +6,8 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
       const { room_id, client_id } = req.body;
 
+      console.log("room_id", room_id);
+
       await addRoomMember(room_id, client_id);
       const members = await getRoomMembers(room_id);
 
