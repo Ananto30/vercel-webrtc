@@ -6,10 +6,13 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
       const { room_id, client_id } = req.body;
 
-      console.log("room_id", room_id);
+      const members = await getRoomMembers(room_id);
+      if (members.includes(client_id)) {
+        return res.status(200).json({ error: "Client is already in the room" });
+      }
 
       await addRoomMember(room_id, client_id);
-      const members = await getRoomMembers(room_id);
+      members.push(client_id);
 
       return res.json({ members });
     } else {
