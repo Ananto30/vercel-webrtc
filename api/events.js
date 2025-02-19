@@ -8,11 +8,6 @@ export default async function handler(req, res) {
       const clientId = req.query.client_id;
 
       const events = await getRoomEvents(roomId, clientId);
-      if (!events.length) {
-        return res
-          .status(404)
-          .json({ error: "No events found for other clients" });
-      }
 
       return res.json({ events });
     } else {
